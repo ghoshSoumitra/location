@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            background: url('https://images.idgesg.net/images/article/2022/07/post-7-image_map-your-cybersecurity-program-to-security-best-practices-100930704-large.jpg?auto=webp&quality=85,70');
+            background-size: cover;
+        }
+        #btn{
+            height: 100px;
+            width: 250px;
+            background-color: aqua;
+            margin-left: 45%;
+            margin-top: 10vh;
+
+            padding: 10px 15px;
+    font-size: 1rem;
+    border: none;
+    box-shadow: 0px 5px 20px white;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+        }
+        #addressTable{
+            margin-left: 38%;
+            margin-top: 10vh;
+            border: 1px solid red;
+
+            padding: 10px 15px;
+    font-size: 1.5rem;
+    border: none;
+    box-shadow: 0px 5px 20px white;
+    border-radius: 20px;
+    font-weight: bold;
+    color: #dcd8c1;
+    text-shadow: 2px 2px 2px rgb(207 162 14);
+ 
+        }
+        .row-class{
+            border: 1px solid red;
+            /* background-color: rgb(135 160 159); */
+            color: white;
+
+            padding: 10px 15px;
+    font-size: 1rem;
+    border: none;
+    box-shadow: 0px 5px 20px white;
+    border-radius: 20px;
+    font-weight: bold;
+    
+                   
+        }
+      
+    </style>
+</head>
+
+<body>
+    <button id="btn">GET YOUR LOCATION</button>
+    <table id="addressTable">
+        <thead>
+            <tr>
+              
+                <th  >Index</th>
+                <th style="padding-left: 250px;" >Value</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <script>
+        const button =document.querySelector("button");
+        const tableBody = document.querySelector("#addressTable tbody");
+     
+        button.addEventListener("click",()=>{
+           
+            button.disabled = true;
+        
+            navigator.geolocation.getCurrentPosition(position=>{
+                const {latitude,longitude}=position.coords;
+                const url=`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
+                fetch(url).then(res=>res.json()).then(data=>{
+                    console.table(data.address)
+                    for (const [index, value] of Object.entries(data.address)) {
+                        const row = document.createElement("tr");
+                        const keyCell = document.createElement("td");
+                        const valueCell = document.createElement("td");
+                        keyCell.textContent = index;
+                        valueCell.textContent = value;
+                        row.appendChild(keyCell);
+                        row.appendChild(valueCell);
+                        tableBody.appendChild(row);
+                       valueCell.style.paddingLeft = "200px";
+                    //  
+                    row.classList.add("row-class");
+
+                    }
+                }).catch(()=>{
+                    console.log("error fetching url")
+                })
+
+            })
+        })
+    </script>
+</body>
+
+
+
+</html>
